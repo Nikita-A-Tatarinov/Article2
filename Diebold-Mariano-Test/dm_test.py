@@ -79,18 +79,18 @@ def dm_test(actual_lst, pred1_lst, pred2_lst, h = 1, crit="MSE", power = 2):
             is_actual_ok = compiled_regex(str(abs(actual)))
             is_pred1_ok = compiled_regex(str(abs(pred1)))
             is_pred2_ok = compiled_regex(str(abs(pred2)))
-            if (not (is_actual_ok and is_pred1_ok and is_pred2_ok)):
+            if (not (is_actual_ok and is_pred1_ok and is_pred2_ok)):  
                 msg = "An element in the actual_lst, pred1_lst or pred2_lst is not numeric."
                 rt = -1
                 return (rt,msg)
         return (rt,msg)
     
     # Error check
-    # error_code = error_check()
-    # # Raise error if cannot pass error check
-    # if (error_code[0] == -1):
-    #     raise SyntaxError(error_code[1])
-    #     return
+    error_code = error_check()
+    # Raise error if cannot pass error check
+    if (error_code[0] == -1):
+        raise SyntaxError(error_code[1])
+        return
     # Import libraries
     from scipy.stats import t
     import collections

@@ -1,7 +1,7 @@
 import dm_test
 import pandas as pd
 # ,   , 
-symbols = [ 'INFY', 'BHARTIARTL', 'AXISBANK']
+symbols = [ 'ACC', 'ULTRACEMCO', 'CIPLA', 'HDFC', 'HCLTECH', 'JSWSTEEL', 'MARUTI','INFY', 'BHARTIARTL', 'AXISBANK']
 
 def test():
     rows = []
@@ -13,7 +13,7 @@ def test():
         cnn = df['cnn'].tolist()
         lstm = df['lstm'].tolist()
         gru = df['gru'].tolist()
-        print(actual)
+        
         param1 = dm_test.dm_test(actual, ann, cnn, crit='poly', power=10)
         param2 = dm_test.dm_test(actual, lstm, gru, crit='poly', power=10)
         param3 = dm_test.dm_test(actual, ann, lstm, crit='poly', power=10)
