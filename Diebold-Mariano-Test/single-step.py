@@ -25,7 +25,7 @@ import json
 
 # 
 
-symbols = [ 'ACC', 'ULTRACEMCO', 'CIPLA', 'HDFC', 'HCLTECH', 'JSWSTEEL', 'MARUTI', 'INFY', 'BHARTIARTL', 'AXISBANK']
+symbols = ['INFY', 'BHARTIARTL', 'AXISBANK']
 window_sizes = [7]
 
 
@@ -45,8 +45,8 @@ def window_transform(time_series, window_size):
 
 def make_ann_model(window_size):
     model = Sequential()
-    model.add(Dense(32, activation='relu', input_shape=(window_size, 1)))
-    model.add(Dense(16, activation='relu'))
+    model.add(Dense(16, activation='relu', input_shape=(window_size, 1)))
+    model.add(Dense(8, activation='relu'))
     model.add(Flatten())
     model.add(Dense(1))
     model.compile(loss='mean_squared_error', optimizer='adam')
@@ -55,10 +55,10 @@ def make_ann_model(window_size):
 
 def make_lstm_model(window_size):
     model_lstm = Sequential()
-    model_lstm.add(LSTM(256, input_shape=(window_size, 1), activation='relu', kernel_initializer='lecun_uniform',
+    model_lstm.add(LSTM(128, input_shape=(window_size, 1), activation='relu', kernel_initializer='lecun_uniform',
                         return_sequences=True))
     model_lstm.add(Dropout(0.2))
-    model_lstm.add(LSTM(128, input_shape=(window_size, 1), activation='relu', kernel_initializer='lecun_uniform',
+    model_lstm.add(LSTM(64, input_shape=(window_size, 1), activation='relu', kernel_initializer='lecun_uniform',
                         return_sequences=False))
     model_lstm.add(Dropout(0.2))
     model_lstm.add(Dense(1, activation='linear'))
@@ -69,8 +69,8 @@ def make_lstm_model(window_size):
 
 def make_cnn_model(window_size):
     model = Sequential()
-    model.add(Conv1D(filters=64, kernel_size=2, activation='relu', input_shape=(window_size, 1)))
-    model.add(Conv1D(filters=32, kernel_size=1, activation='relu'))
+    model.add(Conv1D(filters=32, kernel_size=2, activation='relu', input_shape=(window_size, 1)))
+    model.add(Conv1D(filters=16, kernel_size=1, activation='relu'))
     model.add(MaxPooling1D(pool_size=2))
     # model.add(Dense(32,activation='relu'))
     model.add(Flatten())
@@ -83,10 +83,10 @@ def make_cnn_model(window_size):
 
 def make_gru_model(window_size):
     model = Sequential()
-    model.add(GRU(256, input_shape=(window_size, 1), activation='relu', kernel_initializer='lecun_uniform',
+    model.add(GRU(128, input_shape=(window_size, 1), activation='relu', kernel_initializer='lecun_uniform',
                   return_sequences=True))
     model.add(Dropout(0.2))
-    model.add(GRU(128, input_shape=(window_size, 1), activation='relu', kernel_initializer='lecun_uniform',
+    model.add(GRU(64, input_shape=(window_size, 1), activation='relu', kernel_initializer='lecun_uniform',
                   return_sequences=False))
     model.add(Dropout(0.2))
     model.add(Dense(1, activation='linear'))

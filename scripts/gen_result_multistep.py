@@ -15,7 +15,7 @@ from operator import add
 import json
 import itertools
 
-symbols = ['ACC', 'HCLTECH', 'JSWSTEEL', 'AXISBANK', 'INFY', 'HDFC', 'INFY', 'BHARTIARTL', 'ULTRACEMCO', 'CIPLA', 'MARUTI']
+symbols = ['INFY', 'BHARTIARTL', 'AXISBANK']
 
 # (x, y) here x indicates the input size and y indicates the prediction size
 # (30, 7) means we predict next 7 days stocks using previous 30 days prices
@@ -65,8 +65,8 @@ def test_window_transform(series, input_size, output_size):
 
 def make_ann_model(input_size, output_size):
     model = Sequential()
-    model.add(Dense(32, activation='relu', input_shape=(input_size,)))
-    model.add(Dense(16, activation='relu'))
+    model.add(Dense(16, activation='relu', input_shape=(input_size,)))
+    model.add(Dense(8, activation='relu'))
     model.add(Dense(output_size, activation='linear'))
     model.compile(loss='mean_squared_error', optimizer='adam')
     return model
@@ -74,7 +74,7 @@ def make_ann_model(input_size, output_size):
 
 def make_cnn_model(input_size, output_size):
     model = Sequential()
-    model.add(Conv1D(filters=64, kernel_size=5, strides=1, activation='relu', input_shape=(input_size, 1)))
+    model.add(Conv1D(filters=32, kernel_size=5, strides=1, activation='relu', input_shape=(input_size, 1)))
     model.add(MaxPooling1D(pool_size=2))
     model.add(Flatten())
     model.add(Dense(output_size, activation='linear'))
@@ -86,10 +86,10 @@ def make_cnn_model(input_size, output_size):
 
 def make_lstm_model(input_size, output_size):
     model_lstm = Sequential()
-    model_lstm.add(LSTM(256, input_shape=(input_size, 1), activation='relu', kernel_initializer='lecun_uniform',
+    model_lstm.add(LSTM(128, input_shape=(input_size, 1), activation='relu', kernel_initializer='lecun_uniform',
                         return_sequences=True))
     model_lstm.add(Dropout(0.2))
-    model_lstm.add(LSTM(128, input_shape=(input_size, 1), activation='relu', kernel_initializer='lecun_uniform',
+    model_lstm.add(LSTM(64, input_shape=(input_size, 1), activation='relu', kernel_initializer='lecun_uniform',
                         return_sequences=False))
     model_lstm.add(Dropout(0.2))
     model_lstm.add(Dense(output_size, activation='linear'))
@@ -101,10 +101,10 @@ def make_lstm_model(input_size, output_size):
 
 def make_gru_model(input_size, output_size):
     model = Sequential()
-    model.add(GRU(256, input_shape=(input_size, 1), activation='relu', kernel_initializer='lecun_uniform',
+    model.add(GRU(128, input_shape=(input_size, 1), activation='relu', kernel_initializer='lecun_uniform',
                   return_sequences=True))
     model.add(Dropout(0.2))
-    model.add(GRU(128, input_shape=(input_size, 1), activation='relu', kernel_initializer='lecun_uniform',
+    model.add(GRU(64, input_shape=(input_size, 1), activation='relu', kernel_initializer='lecun_uniform',
                   return_sequences=False))
     model.add(Dropout(0.2))
     model.add(Dense(output_size, activation='linear'))
@@ -182,7 +182,7 @@ if __name__ == '__main__':
                 pred_LSTM = []
                 pred_GRU = []
                 pred_CNN = []
-                for i in range(5):
+                for i in range(2):
                     # ''''''''ANN'''''''''''''''''''
                     X_train, y_train = window_transform(train_sc, in_size, out_size)
                     print('X train: ', X_train.shape)
@@ -256,28 +256,28 @@ if __name__ == '__main__':
                     plot_ann = list(map(add, plot_ann, pred))
 
                 for i in range(len(plot_ann)):
-                    plot_ann[i] = plot_ann[i] / 5
+                    plot_ann[i] = plot_ann[i] / 2
 
                 plot_lstm = [0] * len(pred_LSTM[0])
                 for pred in pred_LSTM:
                     plot_lstm = list(map(add, plot_lstm, pred))
 
                 for i in range(len(plot_lstm)):
-                    plot_lstm[i] = plot_lstm[i] / 5
+                    plot_lstm[i] = plot_lstm[i] / 2
 
                 plot_gru = [0] * len(pred_GRU[0])
                 for pred in pred_GRU:
                     plot_gru = list(map(add, plot_gru, pred))
 
                 for i in range(len(plot_gru)):
-                    plot_gru[i] = plot_gru[i] / 5
+                    plot_gru[i] = plot_gru[i] / 2
 
                 plot_cnn = [0] * len(pred_CNN[0])
                 for pred in pred_CNN:
                     plot_cnn = list(map(add, plot_cnn, pred))
 
                 for i in range(len(plot_cnn)):
-                    plot_cnn[i] = plot_cnn[i] / 5
+                    plot_cnn[i] = plot_cnn[i] / 2
 
                 # save prediction plots
                 plt.plot(flat_y_test, '-', label='True Values', color='#1b9e77')
