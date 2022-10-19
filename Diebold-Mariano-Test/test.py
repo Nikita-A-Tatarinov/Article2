@@ -1,7 +1,7 @@
 import dm_test
 import pandas as pd
 # ,   , 
-symbols = ['INFY', 'BHARTIARTL', 'AXISBANK']
+symbols = [ 'ACC', 'ULTRACEMCO', 'CIPLA', 'HDFC', 'HCLTECH', 'JSWSTEEL', 'MARUTI','INFY', 'BHARTIARTL', 'AXISBANK']
 
 def test():
     rows = []

@@ -15,7 +15,7 @@ from operator import add
 import json
 import itertools
 
-symbols = ['INFY', 'BHARTIARTL', 'AXISBANK']
+symbols = ['ACC', 'HCLTECH', 'JSWSTEEL', 'AXISBANK', 'INFY', 'HDFC', 'INFY', 'BHARTIARTL', 'ULTRACEMCO', 'CIPLA', 'MARUTI']
 
 # (x, y) here x indicates the input size and y indicates the prediction size
 # (30, 7) means we predict next 7 days stocks using previous 30 days prices
@@ -65,8 +65,8 @@ def test_window_transform(series, input_size, output_size):
 
 def make_ann_model(input_size, output_size):
     model = Sequential()
-    model.add(Dense(16, activation='relu', input_shape=(input_size,)))
-    model.add(Dense(8, activation='relu'))
+    model.add(Dense(32, activation='relu', input_shape=(input_size,)))
+    model.add(Dense(16, activation='relu'))
     model.add(Dense(output_size, activation='linear'))
     model.compile(loss='mean_squared_error', optimizer='adam')
     return model
@@ -74,7 +74,7 @@ def make_ann_model(input_size, output_size):
 
 def make_cnn_model(input_size, output_size):
     model = Sequential()
-    model.add(Conv1D(filters=32, kernel_size=5, strides=1, activation='relu', input_shape=(input_size, 1)))
+    model.add(Conv1D(filters=64, kernel_size=5, strides=1, activation='relu', input_shape=(input_size, 1)))
     model.add(MaxPooling1D(pool_size=2))
     model.add(Flatten())
     model.add(Dense(output_size, activation='linear'))
@@ -86,10 +86,10 @@ def make_cnn_model(input_size, output_size):
 
 def make_lstm_model(input_size, output_size):
     model_lstm = Sequential()
-    model_lstm.add(LSTM(128, input_shape=(input_size, 1), activation='relu', kernel_initializer='lecun_uniform',
+    model_lstm.add(LSTM(256, input_shape=(input_size, 1), activation='relu', kernel_initializer='lecun_uniform',
                         return_sequences=True))
     model_lstm.add(Dropout(0.2))
-    model_lstm.add(LSTM(64, input_shape=(input_size, 1), activation='relu', kernel_initializer='lecun_uniform',
+    model_lstm.add(LSTM(128, input_shape=(input_size, 1), activation='relu', kernel_initializer='lecun_uniform',
                         return_sequences=False))
     model_lstm.add(Dropout(0.2))
     model_lstm.add(Dense(output_size, activation='linear'))
@@ -101,10 +101,10 @@ def make_lstm_model(input_size, output_size):
 
 def make_gru_model(input_size, output_size):
     model = Sequential()
-    model.add(GRU(128, input_shape=(input_size, 1), activation='relu', kernel_initializer='lecun_uniform',
+    model.add(GRU(256, input_shape=(input_size, 1), activation='relu', kernel_initializer='lecun_uniform',
                   return_sequences=True))
     model.add(Dropout(0.2))
-    model.add(GRU(64, input_shape=(input_size, 1), activation='relu', kernel_initializer='lecun_uniform',
+    model.add(GRU(128, input_shape=(input_size, 1), activation='relu', kernel_initializer='lecun_uniform',
                   return_sequences=False))
     model.add(Dropout(0.2))
     model.add(Dense(output_size, activation='linear'))

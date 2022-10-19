@@ -86,11 +86,11 @@ def dm_test(actual_lst, pred1_lst, pred2_lst, h = 1, crit="MSE", power = 2):
         return (rt,msg)
     
     # Error check
-    # error_code = error_check()
-    # # Raise error if cannot pass error check
-    # if (error_code[0] == -1):
-    #     raise SyntaxError(error_code[1])
-    #     return
+    error_code = error_check()
+    # Raise error if cannot pass error check
+    if (error_code[0] == -1):
+        raise SyntaxError(error_code[1])
+        return
     # Import libraries
     from scipy.stats import t
     import collections

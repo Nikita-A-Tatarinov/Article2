@@ -24,8 +24,8 @@ import json
 
 # 'ULTRACEMCO', 'CIPLA', 'ACC', 'HDFC', 'HCLTECH', 
 
-symbols = ['INFY', 'BHARTIARTL', 'AXISBANK']
-window_sizes = [3, 9, 15]
+symbols = [ 'JSWSTEEL', 'MARUTI', 'INFY', 'BHARTIARTL', 'AXISBANK']
+window_sizes = [3, 5, 7, 9, 11, 13, 15]
 
 
 def adj_r2_score(r2, n, k):
@@ -44,8 +44,8 @@ def window_transform(time_series, window_size):
 
 def make_ann_model(window_size):
     model = Sequential()
-    model.add(Dense(16, activation='relu', input_shape=(window_size, 1)))
-    model.add(Dense(8, activation='relu'))
+    model.add(Dense(32, activation='relu', input_shape=(window_size, 1)))
+    model.add(Dense(16, activation='relu'))
     model.add(Flatten())
     model.add(Dense(1))
     model.compile(loss='mean_squared_error', optimizer='adam')
@@ -54,10 +54,10 @@ def make_ann_model(window_size):
 
 def make_lstm_model(window_size):
     model_lstm = Sequential()
-    model_lstm.add(LSTM(128, input_shape=(window_size, 1), activation='relu', kernel_initializer='lecun_uniform',
+    model_lstm.add(LSTM(256, input_shape=(window_size, 1), activation='relu', kernel_initializer='lecun_uniform',
                         return_sequences=True))
     model_lstm.add(Dropout(0.2))
-    model_lstm.add(LSTM(64, input_shape=(window_size, 1), activation='relu', kernel_initializer='lecun_uniform',
+    model_lstm.add(LSTM(128, input_shape=(window_size, 1), activation='relu', kernel_initializer='lecun_uniform',
                         return_sequences=False))
     model_lstm.add(Dropout(0.2))
     model_lstm.add(Dense(1, activation='linear'))
@@ -68,8 +68,8 @@ def make_lstm_model(window_size):
 
 def make_cnn_model(window_size):
     model = Sequential()
-    model.add(Conv1D(filters=32, kernel_size=2, activation='relu', input_shape=(window_size, 1)))
-    model.add(Conv1D(filters=16, kernel_size=1, activation='relu'))
+    model.add(Conv1D(filters=64, kernel_size=2, activation='relu', input_shape=(window_size, 1)))
+    model.add(Conv1D(filters=32, kernel_size=1, activation='relu'))
     model.add(MaxPooling1D(pool_size=2))
     # model.add(Dense(32,activation='relu'))
     model.add(Flatten())
@@ -82,10 +82,10 @@ def make_cnn_model(window_size):
 
 def make_gru_model(window_size):
     model = Sequential()
-    model.add(GRU(128, input_shape=(window_size, 1), activation='relu', kernel_initializer='lecun_uniform',
+    model.add(GRU(256, input_shape=(window_size, 1), activation='relu', kernel_initializer='lecun_uniform',
                   return_sequences=True))
     model.add(Dropout(0.2))
-    model.add(GRU(64, input_shape=(window_size, 1), activation='relu', kernel_initializer='lecun_uniform',
+    model.add(GRU(128, input_shape=(window_size, 1), activation='relu', kernel_initializer='lecun_uniform',
                   return_sequences=False))
     model.add(Dropout(0.2))
     model.add(Dense(1, activation='linear'))
@@ -159,7 +159,7 @@ if __name__ == '__main__':
                 pred_LSTM = []
                 pred_GRU = []
                 pred_CNN = []
-                for i in range(2):
+                for i in range(5):
                     # ''''''''ANN'''''''''''''''''''
                     X_train, y_train = window_transform(train_sc, win_sz)
                     X_test, y_test = window_transform(test_sc, win_sz)
@@ -226,28 +226,28 @@ if __name__ == '__main__':
                     plot_ann = list(map(add, plot_ann, pred))
 
                 for i in range(len(plot_ann)):
-                    plot_ann[i] = plot_ann[i] / 2
+                    plot_ann[i] = plot_ann[i] / 5
 
                 plot_lstm = [0] * len(pred_LSTM[0])
                 for pred in pred_LSTM:
                     plot_lstm = list(map(add, plot_lstm, pred))
 
                 for i in range(len(plot_lstm)):
-                    plot_lstm[i] = plot_lstm[i] / 2
+                    plot_lstm[i] = plot_lstm[i] / 5
 
                 plot_gru = [0] * len(pred_GRU[0])
                 for pred in pred_GRU:
                     plot_gru = list(map(add, plot_gru, pred))
 
                 for i in range(len(plot_gru)):
-                    plot_gru[i] = plot_gru[i] / 2
+                    plot_gru[i] = plot_gru[i] / 5
 
                 plot_cnn = [0] * len(pred_CNN[0])
                 for pred in pred_CNN:
                     plot_cnn = list(map(add, plot_cnn, pred))
 
                 for i in range(len(plot_cnn)):
-                    plot_cnn[i] = plot_cnn[i] / 2
+                    plot_cnn[i] = plot_cnn[i] / 5
 
                 # save prediction plots
                 plt.plot(y_test, '-', label='True Values', color='#1b9e77')
